@@ -1,0 +1,119 @@
+Enter<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Love Me?</title>
+    <style>
+        body {
+            background-color: #1a1a2e;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            border: 2px solid #ff4d6d;
+            padding: 30px;
+            border-radius: 20px;
+            background: #16213e;
+            width: 85%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            height: 50px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .yes-btn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        .no-btn {
+            background-color: #555;
+            color: white;
+            position: absolute;
+        }
+
+        #resultBox h2 {
+            color: #ff4d6d;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="questionBox">
+        <img src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Bubu Bear">
+        <h2 class="question">Do you love me? 🥺</h2>
+        <div class="button-container">
+            <button class="yes-btn btn" onclick="showResult()">Yes</button>
+            <button class="no-btn btn" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <div class="container" id="resultBox" style="display: none;">
+        <img src="https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif" alt="Happy Bears">
+        <h2>I knew it! 😍❤️</h2>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const questionBox = document.getElementById('questionBox');
+        const resultBox = document.getElementById('resultBox');
+
+        // تحريك زر "No" لمكان عشوائي عند محاولة لمسه
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton); // للموبايل
+
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        // إظهار النتيجة عند الضغط على "Yes"
+        function showResult() {
+            questionBox.style.display = 'none';
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
