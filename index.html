@@ -3,88 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine? ❤️</title>
+    <title>Do You Love Me? ❤️</title>
     <style>
         body {
-            margin: 0;
+            background-color: #0b0c10;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #ffdeeb; /* خلفية وردية هادئة */
-            font-family: 'Arial', sans-serif;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
+            color: white;
         }
-        .container {
-            text-align: center;
-            background: white;
+        .card {
+            background: #1f2833;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 350px;
+            border: 1px solid #66fcf1;
         }
-        /* تنسيق صور الدببة */
-        .bear-img {
-            width: 160px;
+        video {
+            width: 100%;
             height: auto;
+            border-radius: 15px;
             margin-bottom: 20px;
         }
-        h1 { color: #d63384; font-size: 22px; }
-        .buttons {
+        .btn-container {
+            margin-top: 20px;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 20px;
             height: 50px;
+            position: relative;
         }
         button {
-            padding: 10px 25px;
+            padding: 10px 30px;
             font-size: 18px;
+            cursor: pointer;
             border: none;
             border-radius: 10px;
-            cursor: pointer;
             transition: 0.3s;
+            font-weight: bold;
         }
-        #yesBtn { background: #ff4d6d; color: white; }
-        #noBtn { background: #adb5bd; color: white; position: absolute; }
+        #yesBtn { background-color: #45a29e; color: white; }
+        #noBtn { background-color: #c5c6c7; color: #1f2833; position: absolute; }
     </style>
 </head>
 <body>
 
-    <div id="questionPage" class="container">
-        <img class="bear-img" src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Asking Bear">
-        <h1>Do you love me? ❤️</h1>
-        <div class="buttons">
-            <button id="yesBtn" onclick="celebrate()">Yes</button>
+    <div class="card" id="questionCard">
+        <video id="mainVideo" src="https://raw.githubusercontent.com/hamoyouo84-del/yosefbebo/main/VID-20260116-WA0027.mp4" loop autoplay muted playsinline></video>
+        <h2 id="statusText">Do you love me? 🥺</h2>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="showLove()">Yes</button>
             <button id="noBtn">No</button>
         </div>
     </div>
 
-    <div id="resultPage" class="container" style="display: none;">
-        <img class="bear-img" src="https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif" alt="Happy Bears">
-        <h1>I Knew It! 😍❤️</h1>
-    </div>
-
     <script>
         const noBtn = document.getElementById('noBtn');
-        const questionPage = document.getElementById('questionPage');
-        const resultPage = document.getElementById('resultPage');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainVideo = document.getElementById('mainVideo');
+        const statusText = document.getElementById('statusText');
 
-        // كود هروب زر "No"
-        function moveNo() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        // روابط الفيديوهات المباشرة من حسابك
+        const videoAsk = "https://raw.githubusercontent.com/hamoyouo84-del/yosefbebo/main/VID-20260116-WA0027.mp4";
+        const videoYes = "https://raw.githubusercontent.com/hamoyouo84-del/yosefbebo/main/VID-20260116-WA0028.mp4";
+
+        // وظيفة تحريك زر No
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
+            noBtn.style.position = 'fixed';
+            
+            // التأكد أن الفيديو الأول شغال
+            if (mainVideo.src !== videoAsk) {
+                mainVideo.src = videoAsk;
+                mainVideo.play();
+            }
         }
 
-        noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
 
-        // عند الضغط على Yes
-        function celebrate() {
-            questionPage.style.display = 'none';
-            resultPage.style.display = 'block';
+        // وظيفة الضغط على Yes
+        function showLove() {
+            mainVideo.src = videoYes; // تغيير الفيديو للثاني
+            mainVideo.play();
+            statusText.innerHTML = "I Knew It! 😍❤️";
+            noBtn.style.display = 'none';
+            yesBtn.style.display = 'none';
         }
     </script>
 </body>
