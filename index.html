@@ -1,178 +1,91 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine? ❤️</title>
     <style>
-        :root {
-            --primary-color: #ff4d6d;
-            --secondary-color: #ff758f;
-            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-
         body {
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: var(--bg-gradient);
-            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            background: #ffdeeb; /* خلفية وردية هادئة */
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
-            color: white;
         }
-
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 30px;
+        .container {
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-            z-index: 10;
-            transition: transform 0.5s ease;
-        }
-
-        .gif-container img {
-            width: 180px;
-            height: auto;
+            background: white;
+            padding: 30px;
             border-radius: 20px;
-            margin-bottom: 25px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 320px;
         }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        /* تنسيق صور الدببة */
+        .bear-img {
+            width: 160px;
+            height: auto;
+            margin-bottom: 20px;
         }
-
-        .btn-group {
+        h1 { color: #d63384; font-size: 22px; }
+        .buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            height: 60px;
-            position: relative;
+            gap: 15px;
+            margin-top: 20px;
+            height: 50px;
         }
-
-        .btn {
-            padding: 12px 35px;
-            font-size: 1.1rem;
-            font-weight: 600;
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
             border: none;
-            border-radius: 15px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
         }
-
-        #yesBtn {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        #yesBtn:hover {
-            transform: scale(1.1);
-            background: var(--secondary-color);
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-
-        #noBtn {
-            background: #ffffff;
-            color: #1a1a2e;
-            position: absolute;
-            z-index: 999;
-        }
-
-        /* أنيميشن القلوب المتساقطة */
-        .heart-particle {
-            position: absolute;
-            color: var(--primary-color);
-            font-size: 20px;
-            user-select: none;
-            pointer-events: none;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-
-        .hidden { display: none; }
+        #yesBtn { background: #ff4d6d; color: white; }
+        #noBtn { background: #adb5bd; color: white; position: absolute; }
     </style>
 </head>
 <body>
 
-    <div class="card" id="mainCard">
-        <div class="gif-container">
-            <img id="mainGif" src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Bubu Dudu">
-        </div>
-        <h1 id="headline">Do you love me? ❤️</h1>
-        <div class="btn-group">
-            <button class="btn" id="yesBtn">Yes</button>
-            <button class="btn" id="noBtn">No</button>
+    <div id="questionPage" class="container">
+        <img class="bear-img" src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Asking Bear">
+        <h1>Do you love me? ❤️</h1>
+        <div class="buttons">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn">No</button>
         </div>
     </div>
 
+    <div id="resultPage" class="container" style="display: none;">
+        <img class="bear-img" src="https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif" alt="Happy Bears">
+        <h1>I Knew It! 😍❤️</h1>
+    </div>
+
     <script>
-        const yesBtn = document.querySelector('#yesBtn');
-        const noBtn = document.querySelector('#noBtn');
-        const mainGif = document.querySelector('#mainGif');
-        const headline = document.querySelector('#headline');
+        const noBtn = document.getElementById('noBtn');
+        const questionPage = document.getElementById('questionPage');
+        const resultPage = document.getElementById('resultPage');
 
-        // مصفوفة بجمل "لا" لإحباط المستخدم بشكل كوميدي
-        const messages = ["Are you sure?", "Think again!", "Last chance!", "Really?", "You're breaking my heart!"];
-
-        function moveButton() {
-            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-            
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-            
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-            noBtn.style.position = 'fixed';
-            
-            // تغيير النص بشكل عشوائي
-            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-            noBtn.innerText = randomMsg;
+        // كود هروب زر "No"
+        function moveNo() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
         }
 
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveButton();
-        });
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
 
-        yesBtn.addEventListener('click', () => {
-            headline.innerHTML = "I Knew It! <br> I Love You Too! 💖";
-            mainGif.src = "https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif";
-            noBtn.classList.add('hidden');
-            yesBtn.style.transform = "scale(1.5)";
-            yesBtn.style.display = "none";
-            
-            // بدء هطول القلوب
-            setInterval(createHeart, 200);
-        });
-
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            document.body.appendChild(heart);
-            
-            setTimeout(() => heart.remove(), 5000);
+        // عند الضغط على Yes
+        function celebrate() {
+            questionPage.style.display = 'none';
+            resultPage.style.display = 'block';
         }
     </script>
 </body>
 </html>
-
