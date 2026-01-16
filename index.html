@@ -1,119 +1,178 @@
-Enter<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Do You Love Me?</title>
+    <title>Be My Valentine? ❤️</title>
     <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ff758f;
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
         body {
-            background-color: #1a1a2e;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
+            color: white;
         }
 
-        .container {
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
             text-align: center;
-            border: 2px solid #ff4d6d;
-            padding: 30px;
-            border-radius: 20px;
-            background: #16213e;
-            width: 85%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            width: 90%;
             max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: transform 0.5s ease;
         }
 
-        img {
-            width: 200px;
+        .gif-container img {
+            width: 180px;
             height: auto;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
         }
 
-        .question {
-            font-size: 24px;
+        h1 {
+            font-size: 2rem;
             margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        .button-container {
+        .btn-group {
             display: flex;
             justify-content: center;
             gap: 20px;
-            height: 50px;
+            height: 60px;
             position: relative;
         }
 
         .btn {
-            padding: 12px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
             border: none;
-            border-radius: 10px;
-            transition: 0.2s;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .yes-btn {
-            background-color: #ff4d6d;
+        #yesBtn {
+            background: var(--primary-color);
             color: white;
         }
 
-        .no-btn {
-            background-color: #555;
-            color: white;
+        #yesBtn:hover {
+            transform: scale(1.1);
+            background: var(--secondary-color);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        #noBtn {
+            background: #ffffff;
+            color: #1a1a2e;
             position: absolute;
+            z-index: 999;
         }
 
-        #resultBox h2 {
-            color: #ff4d6d;
-            font-size: 28px;
+        /* أنيميشن القلوب المتساقطة */
+        .heart-particle {
+            position: absolute;
+            color: var(--primary-color);
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
         }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="questionBox">
-        <img src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Bubu Bear">
-        <h2 class="question">Do you love me? 🥺</h2>
-        <div class="button-container">
-            <button class="yes-btn btn" onclick="showResult()">Yes</button>
-            <button class="no-btn btn" id="noBtn">No</button>
+    <div class="card" id="mainCard">
+        <div class="gif-container">
+            <img id="mainGif" src="https://media.tenor.com/7S8fC3y5D_AAAAAi/bubu-dudu-bubu.gif" alt="Bubu Dudu">
+        </div>
+        <h1 id="headline">Do you love me? ❤️</h1>
+        <div class="btn-group">
+            <button class="btn" id="yesBtn">Yes</button>
+            <button class="btn" id="noBtn">No</button>
         </div>
     </div>
 
-    <div class="container" id="resultBox" style="display: none;">
-        <img src="https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif" alt="Happy Bears">
-        <h2>I knew it! 😍❤️</h2>
-    </div>
-
     <script>
-        const noBtn = document.getElementById('noBtn');
-        const questionBox = document.getElementById('questionBox');
-        const resultBox = document.getElementById('resultBox');
+        const yesBtn = document.querySelector('#yesBtn');
+        const noBtn = document.querySelector('#noBtn');
+        const mainGif = document.querySelector('#mainGif');
+        const headline = document.querySelector('#headline');
 
-        // تحريك زر "No" لمكان عشوائي عند محاولة لمسه
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton); // للموبايل
+        // مصفوفة بجمل "لا" لإحباط المستخدم بشكل كوميدي
+        const messages = ["Are you sure?", "Think again!", "Last chance!", "Really?", "You're breaking my heart!"];
 
         function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
             
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
             noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+            
+            // تغيير النص بشكل عشوائي
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            noBtn.innerText = randomMsg;
         }
 
-        // إظهار النتيجة عند الضغط على "Yes"
-        function showResult() {
-            questionBox.style.display = 'none';
-            resultBox.style.display = 'block';
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        yesBtn.addEventListener('click', () => {
+            headline.innerHTML = "I Knew It! <br> I Love You Too! 💖";
+            mainGif.src = "https://media.tenor.com/97mXm8S-u_0AAAAi/bubu-dudu-kiss.gif";
+            noBtn.classList.add('hidden');
+            yesBtn.style.transform = "scale(1.5)";
+            yesBtn.style.display = "none";
+            
+            // بدء هطول القلوب
+            setInterval(createHeart, 200);
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
         }
     </script>
 </body>
 </html>
+
